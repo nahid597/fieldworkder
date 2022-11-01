@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workorder-service
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: workorder-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: workorder-service
+    spec:
+      hostNetwork: true
+      containers:
+      - name: workorder-service
+        image: nahidh597/workorder-service
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: workorder-srv
+  namespace: default
+spec:
+  selector:
+    app: workorder-service
+  type: ClusterIP
+  ports:
+  - name: workorder-service
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+---
+
